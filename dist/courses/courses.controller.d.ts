@@ -1,4 +1,5 @@
 export declare class CoursesController {
-    findAll(): string;
+    findAll(response: any): any;
     findOne(id: string): string;
+    create(body: any): any;
 }

@@ -15,18 +15,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CoursesController = void 0;
 const common_1 = require("@nestjs/common");
 let CoursesController = class CoursesController {
-    findAll() {
-        return 'Listagem de cursos';
+    findAll(response) {
+        return response.status(200).json({ message: 'Listagem de cursos' });
     }
     findOne(id) {
         return `Curso com ID ${id}`;
+    }
+    create(body) {
+        return body;
     }
 };
 exports.CoursesController = CoursesController;
 __decorate([
     (0, common_1.Get)('list'),
+    __param(0, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], CoursesController.prototype, "findAll", null);
 __decorate([
@@ -36,6 +40,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], CoursesController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], CoursesController.prototype, "create", null);
 exports.CoursesController = CoursesController = __decorate([
     (0, common_1.Controller)('courses')
 ], CoursesController);
