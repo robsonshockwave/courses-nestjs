@@ -26,7 +26,7 @@ describe('CoursesService', () => {
             create: jest.fn(),
             save: jest.fn(),
             find: jest.fn(),
-            preload: jest.fn(),
+            findOne: jest.fn(),
           },
         },
         {
@@ -92,6 +92,26 @@ describe('CoursesService', () => {
     const result = await service.findAll();
 
     expect(courseRepository.find).toHaveBeenCalledWith({ relations: ['tags'] });
+    expect(result).toEqual(expectOutput);
+  });
+
+  it('should find one course', async () => {
+    const expectOutput = {
+      id,
+      name: 'Teste',
+      description: 'Test description',
+      tags: [{ id, name: 'nestjs', created_at: date }],
+      created_at: date,
+    };
+
+    courseRepository.findOne.mockResolvedValue(expectOutput as Course);
+
+    const result = await service.findOne(id);
+
+    expect(courseRepository.findOne).toHaveBeenCalledWith({
+      where: { id },
+      relations: ['tags'],
+    });
     expect(result).toEqual(expectOutput);
   });
 });
