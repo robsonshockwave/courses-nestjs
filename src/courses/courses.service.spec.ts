@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Course } from './entities/courses.entity';
 import { Tag } from './entities/tags.entity';
 import { CreateCourseDTO } from './dto/create-course.dto';
+import { UpdateCourseDTO } from './dto/update-course.dto';
 
 describe('CoursesService', () => {
   let service: CoursesService;
@@ -28,6 +29,7 @@ describe('CoursesService', () => {
             find: jest.fn(),
             findOne: jest.fn(),
             remove: jest.fn(),
+            preload: jest.fn(),
           },
         },
         {
@@ -131,5 +133,38 @@ describe('CoursesService', () => {
 
     expect(courseRepository.findOne).toHaveBeenCalledWith({ where: { id } });
     expect(courseRepository.remove).toHaveBeenCalledWith(expectOutput);
+    expect(result).toEqual(undefined);
+  });
+
+  it('should update a course', async () => {
+    const expectOutputTags = [{ id, name: 'nestjs', created_at: date }];
+    const expectOutputCourse = {
+      id,
+      name: 'Teste',
+      description: 'Test description',
+      tags: expectOutputTags,
+      created_at: date,
+    };
+
+    tagRepository.findOne.mockResolvedValue(null);
+    tagRepository.create.mockReturnValue(expectOutputTags[0] as Tag);
+    courseRepository.preload.mockResolvedValue(expectOutputCourse as Course);
+    courseRepository.save.mockResolvedValue(expectOutputCourse as Course);
+
+    const updateCourseDTO: UpdateCourseDTO = {
+      name: 'Teste',
+      description: 'Test description',
+      tags: ['nestjs'],
+    };
+
+    const result = await service.update(id, updateCourseDTO);
+
+    expect(courseRepository.preload).toHaveBeenCalledWith({
+      ...updateCourseDTO,
+      id,
+      tags: expectOutputTags,
+    });
+    expect(courseRepository.save).toHaveBeenCalledWith(expectOutputCourse);
+    expect(result).toEqual(expectOutputCourse);
   });
 });
