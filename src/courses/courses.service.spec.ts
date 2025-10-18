@@ -27,6 +27,7 @@ describe('CoursesService', () => {
             save: jest.fn(),
             find: jest.fn(),
             findOne: jest.fn(),
+            remove: jest.fn(),
           },
         },
         {
@@ -113,5 +114,22 @@ describe('CoursesService', () => {
       relations: ['tags'],
     });
     expect(result).toEqual(expectOutput);
+  });
+
+  it('should remove a course', async () => {
+    const expectOutput = {
+      id,
+      name: 'Teste',
+      description: 'Test description',
+      tags: [{ id, name: 'nestjs', created_at: date }],
+      created_at: date,
+    };
+
+    courseRepository.findOne.mockResolvedValue(expectOutput as Course);
+
+    const result = await service.remove(id);
+
+    expect(courseRepository.findOne).toHaveBeenCalledWith({ where: { id } });
+    expect(courseRepository.remove).toHaveBeenCalledWith(expectOutput);
   });
 });
