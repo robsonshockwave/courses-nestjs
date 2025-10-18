@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { Course } from './courses/entities/courses.entity';
 import { Tag } from './courses/entities/tags.entity';
 import { CreateCoursesTable1760740796481 } from 'src/migrations/1760740796481-CreateCoursesTable';
@@ -6,18 +8,20 @@ import { CreateCoursesTagsTable1760746292249 } from 'src/migrations/176074629224
 import { AddCoursesIdToCoursesTagsTable1760747551912 } from 'src/migrations/1760747551912-AddCoursesIdToCoursesTagsTable';
 import { AddTagsIdToCoursesTagsTable1760748149206 } from 'src/migrations/1760748149206-AddTagsIdToCoursesTagsTable';
 import { DataSource } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 
 export const databaseProviders = [
   {
     provide: 'DATA_SOURCE',
-    useFactory: async () => {
+    inject: [ConfigService],
+    useFactory: async (configService: ConfigService) => {
       const dataSource = new DataSource({
         type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'docker',
-        database: 'devtraining',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USER'),
+        password: configService.get<string>('DB_PASS'),
+        database: configService.get<string>('DB_NAME'),
         entities: [Course, Tag],
         synchronize: false,
       });
@@ -28,11 +32,11 @@ export const databaseProviders = [
 
 export const dataSource = new DataSource({
   type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'postgres',
-  password: 'docker',
-  database: 'devtraining',
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
   entities: [Course, Tag],
   synchronize: false,
   migrations: [
