@@ -25,7 +25,7 @@ export class Tag {
 
   @BeforeInsert()
   generatedId() {
-    if (!this.id) {
+    if (this.id) {
       return;
     }
 

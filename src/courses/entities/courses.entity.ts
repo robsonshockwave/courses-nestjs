@@ -32,7 +32,7 @@ export class Course {
 
   @BeforeInsert()
   generatedId() {
-    if (!this.id) {
+    if (this.id) {
       return;
     }
 
