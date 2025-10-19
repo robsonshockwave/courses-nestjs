@@ -9,7 +9,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env', // caminho para o arquivo .env
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
     }),
     CoursesModule,
     DatabaseModule,

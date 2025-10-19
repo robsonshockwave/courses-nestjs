@@ -7,4 +7,10 @@ export default {
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
+  moduleNameMapper: {
+    '^src/(.*)$': '<rootDir>/src/$1',
+  },
+  detectOpenHandles: true,
+  forceExit: true,
+  setupFiles: ['dotenv/config'],
 };
